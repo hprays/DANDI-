@@ -12,10 +12,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { useDandiState } from "@/lib/dandi-state";
+import { getAuthSession } from "@/lib/auth-session";
 
 export default function MyPage() {
   const { notices, reports, pickupPasses, issuePickupPass, markNoticeRead, refreshNotices, noticesLoading, noticesError, apiConfigured, apiBaseUrl } =
     useDandiState();
+  const session = getAuthSession();
   const [keyword, setKeyword] = useState("");
   const [tags, setTags] = useState<string[]>(["에어팟", "검정", "지갑"]);
   const [alertEnabled, setAlertEnabled] = useState(true);
@@ -58,11 +60,11 @@ export default function MyPage() {
             )}
             <div className="space-y-2">
               <Label>이름</Label>
-              <Input defaultValue="홍길동" />
+              <Input defaultValue={session?.name ?? "홍길동"} readOnly />
             </div>
             <div className="space-y-2">
               <Label>학교 이메일</Label>
-              <Input defaultValue="example@dankook.ac.kr" />
+              <Input defaultValue={session?.email ?? "example@dankook.ac.kr"} readOnly />
             </div>
           </CardContent>
         </Card>

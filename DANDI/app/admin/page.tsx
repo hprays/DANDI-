@@ -169,21 +169,21 @@ export default function AdminPage() {
         return;
       }
       const data = (await response.json()) as {
-        id?: string;
+        id?: string | number;
         resultId?: string;
-        category?: string;
-        labels?: string[];
-        rgb?: { r?: number; g?: number; b?: number };
-        text?: string;
+        documentType?: string;
+        objectLabels?: string[];
+        dominantColors?: string[];
+        maskedText?: string;
       };
-      const resultId = data.id ?? data.resultId ?? "";
+      const resultId = String(data.id ?? data.resultId ?? "");
       const normalized = {
         id: resultId,
-        category: data.category,
-        labels: data.labels ?? [],
-        rgb: data.rgb,
-        text: data.text,
-        colorName: rgbToColorName(data.rgb),
+        category: data.documentType,
+        labels: data.objectLabels ?? [],
+        rgb: undefined as { r?: number; g?: number; b?: number } | undefined,
+        text: data.maskedText,
+        colorName: data.dominantColors?.[0],
       };
       setVisionResult(normalized);
       setVisionResultId(resultId);
@@ -231,19 +231,19 @@ export default function AdminPage() {
         return;
       }
       const data = (await response.json()) as {
-        id?: string;
-        category?: string;
-        labels?: string[];
-        rgb?: { r?: number; g?: number; b?: number };
-        text?: string;
+        id?: string | number;
+        documentType?: string;
+        objectLabels?: string[];
+        dominantColors?: string[];
+        maskedText?: string;
       };
       setVisionResult({
-        id: data.id ?? visionResultId.trim(),
-        category: data.category,
-        labels: data.labels ?? [],
-        rgb: data.rgb,
-        text: data.text,
-        colorName: rgbToColorName(data.rgb),
+        id: String(data.id ?? visionResultId.trim()),
+        category: data.documentType,
+        labels: data.objectLabels ?? [],
+        rgb: undefined,
+        text: data.maskedText,
+        colorName: data.dominantColors?.[0],
       });
       setVisionMessage("분석 결과를 불러왔습니다.");
     } catch (error) {

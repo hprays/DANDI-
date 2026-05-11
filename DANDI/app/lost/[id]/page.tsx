@@ -10,13 +10,15 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { use } from "react";
 import { fetchAIGuidance } from "@/lib/dandi-state";
 import { lostItems } from "@/lib/mock-data";
 import { getCustomLostItems } from "@/lib/custom-lost-items";
 
-export default function LostDetailPage({ params }: { params: { id: string } }) {
+export default function LostDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params);
   const [customItems] = useState(() => getCustomLostItems());
-  const item = useMemo(() => [...customItems, ...lostItems].find((it) => it.id === params.id) ?? lostItems[0], [customItems, params.id]);
+  const item = useMemo(() => [...customItems, ...lostItems].find((it) => it.id === id) ?? lostItems[0], [customItems, id]);
   const [aiGuide, setAiGuide] = useState<{ cautionTitle: string; cautions: string[]; chatbotTips: string[] } | null>(null);
   const loading = aiGuide === null;
 

@@ -71,6 +71,8 @@ export default function LoginPage() {
         accessToken,
         profileCompleted,
         provider: "firebase-google",
+        name: credential.user.displayName ?? undefined,
+        email: credential.user.email ?? undefined,
       });
 
       router.replace(profileCompleted ? "/home" : "/onboarding");

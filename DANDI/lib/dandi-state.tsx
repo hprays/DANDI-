@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { getAuthSession } from "@/lib/auth-session";
 
 export type ReportStatus = "pending" | "resolved" | "picked_up" | "unavailable";
 
@@ -90,10 +91,14 @@ async function apiJson<T>(path: string, init?: RequestInit): Promise<T> {
     throw new Error("NEXT_PUBLIC_API_BASE_URL 설정이 필요합니다.");
   }
 
+  const session = getAuthSession();
+  const authHeader = session?.accessToken ? { Authorization: `Bearer ${session.accessToken}` } : {};
+
   const response = await fetch(apiUrl(path), {
     ...init,
     headers: {
       "Content-Type": "application/json",
+      ...authHeader,
       ...(init?.headers ?? {}),
     },
   });
